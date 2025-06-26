@@ -952,36 +952,137 @@ export const announcementsData = [
 ];
 
 
-// YOU SHOULD CHANGE THE DATES OF THE EVENTS TO THE CURRENT DATE TO SEE THE EVENTS ON THE CALENDAR
 export const calendarEvents = [
   {
-    title: "Программирование",
+    title: "Проектная деятельность",
     allDay: false,
-    start: new Date(2025, 4, 3, 9, 0),
-    end: new Date(2025, 4, 3, 10, 30),
+    start: new Date(2025, 4, 7, 9, 0),
+    end: new Date(2025, 4, 7, 10, 30),
   },
   {
-    title: "Дискретная математика",
+    title: "Промежуточная аттестация",
     allDay: false,
-    start: new Date(2025, 4, 3, 10, 45),
-    end: new Date(2025, 4, 3, 12, 15),
-  },
-  {
-    title: "Физика",
-    allDay: false,
-    start: new Date(2025, 4, 3, 13, 0),
-    end: new Date(2025, 4, 3, 14, 30),
-  },
-  {
-    title: "История IT",
-    allDay: false,
-    start: new Date(2025, 4, 3, 14, 45),
-    end: new Date(2025, 4, 3, 16, 15),
+    start: new Date(2025, 4, 7, 13, 0),
+    end: new Date(2025, 4, 7, 14, 30),
   },
   {
     title: "Английский язык",
     allDay: false,
-    start: new Date(2025, 4, 3, 16, 30),
-    end: new Date(2025, 4, 3, 18, 0),
+    start: new Date(2025, 4, 7, 16, 30),
+    end: new Date(2025, 4, 7, 18, 0),
+  },
+];
+
+export const links = [
+  {
+    title: "МЕНЮ",
+    list: [
+      {
+        title: "Главная",
+        path: "/",
+        icon: "/home.png",
+        roles: ["admin", "teacher", "student"],
+      },
+      {
+        title: "Преподаватели",
+        path: "/list/teachers",
+        icon: "/teacher.png",
+        roles: ["admin"],
+      },
+      {
+        title: "Студенты",
+        path: "/list/students",
+        icon: "/student.png",
+        roles: ["admin", "teacher"],
+      },
+      {
+        title: "Дисциплины",
+        path: "/list/subjects",
+        icon: "/subject.png",
+        roles: ["admin"],
+      },
+      {
+        title: "Аудитории",
+        path: "/list/classes",
+        icon: "/class.png",
+        roles: ["admin", "teacher"],
+      },
+      {
+        title: "Расписание",
+        path: "/list/lessons",
+        icon: "/lesson.png",
+        roles: ["admin", "teacher"],
+      },
+      {
+        title: "Экзамены",
+        path: "/list/exams",
+        icon: "/exam.png",
+        roles: ["admin", "teacher", "student"],
+      },
+      {
+        title: "Задания",
+        path: "/list/assignments",
+        icon: "/assignment.png",
+        roles: ["admin", "teacher", "student"],
+      },
+      {
+        title: "Успеваемость",
+        path: "/list/results",
+        icon: "/result.png",
+        roles: ["admin", "teacher", "student"],
+      },
+      {
+        title: "Посещаемость",
+        path: "/list/attendance",
+        icon: "/attendance.png",
+        roles: ["admin", "teacher", "student"],
+      },
+      {
+        title: "События",
+        path: "/list/events",
+        icon: "/calendar.png",
+        roles: ["admin", "teacher", "student"],
+      },
+      {
+        title: "Объявления",
+        path: "/list/announcements",
+        icon: "/announcement.png",
+        roles: ["admin", "teacher", "student"],
+      },
+    ],
+  },
+  {
+    title: "ОБОРУДОВАНИЕ",
+    list: [
+      {
+        title: "Оборудование",
+        path: "/list/equipment",
+        icon: "/equipment.png",
+        roles: ["admin", "teacher", "student"],
+      },
+      {
+        title: "Бронирование",
+        path: "/list/equipment/bookings",
+        icon: "/equipmentBooking.png",
+        roles: ["admin", "teacher", "student"],
+      },
+    ],
+  },
+  {
+    title: "ПРОФИЛЬ",
+    list: [
+      {
+        title: "Профиль",
+        path: "/profile",
+        icon: "/profile.png",
+        roles: ["admin", "teacher", "student"],
+      },
+      {
+        title: "Выход",
+        path: "/logout",
+        icon: "/logout.png",
+        roles: ["admin", "teacher", "student"],
+      },
+    ],
   },
 ];

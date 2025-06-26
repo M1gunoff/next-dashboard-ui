@@ -1,0 +1,267 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id       String @id
+  username String @unique
+}
+
+model Student {
+  id          String       @id
+  username    String       @unique
+  name        String
+  surname     String
+  email       String?
+  phone       String?
+  address     String
+  img         String?
+  groupNumber String?
+  sex         UserSex
+  createdAt   DateTime     @default(now())
+  classId     Int?
+  gradeId     Int
+  birthday    DateTime
+  updatedAt   DateTime     @updatedAt
+  attendances Attendance[]
+  results     Result[]
+  class       Class?       @relation(fields: [classId], references: [id])
+  grade       Grade        @relation(fields: [gradeId], references: [id])
+  projects    Project[]    @relation("ProjectToStudent")
+}
+
+model Teacher {
+  id          String    @id
+  username    String    @unique
+  name        String
+  surname     String
+  patronymic  String?
+  email       String?   @unique
+  phone       String?   @unique
+  address     String
+  img         String?
+  groupNumber String?
+  sex         UserSex
+  createdAt   DateTime  @default(now())
+  birthday    DateTime
+  classes     Class[]
+  lessons     Lesson[]
+  projects    Project[]
+  subjects    Subject[] @relation("SubjectToTeacher")
+}
+
+model Grade {
+  id       Int       @id @default(autoincrement())
+  level    Int       @unique
+  classess Class[]
+  students Student[]
+}
+
+model Class {
+  id            Int            @id @default(autoincrement())
+  name          String         @unique
+  capacity      Int
+  supervisorId  String?
+  gradeId       Int
+  announcements Announcement[]
+  grade         Grade          @relation(fields: [gradeId], references: [id])
+  supervisor    Teacher?       @relation(fields: [supervisorId], references: [id])
+  events        Event[]
+  lessons       Lesson[]
+  students      Student[]
+}
+
+model Subject {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  lessons  Lesson[]
+  teachers Teacher[] @relation("SubjectToTeacher")
+}
+
+model Lesson {
+  id          Int          @id @default(autoincrement())
+  name        String
+  day         Day
+  startTime   DateTime
+  endTime     DateTime
+  subjectId   Int
+  classId     Int
+  teacherId   String
+  assignments Assignment[]
+  attendances Attendance[]
+  exams       Exam[]
+  class       Class        @relation(fields: [classId], references: [id])
+  subject     Subject      @relation(fields: [subjectId], references: [id])
+  teacher     Teacher      @relation(fields: [teacherId], references: [id])
+}
+
+model Exam {
+  id        Int      @id @default(autoincrement())
+  title     String
+  startTime DateTime
+  endTime   DateTime
+  lessonId  Int
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  results   Result[]
+}
+
+model Assignment {
+  id        Int      @id @default(autoincrement())
+  title     String
+  startDate DateTime
+  dueDate   DateTime
+  lessonId  Int
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  results   Result[]
+}
+
+model Result {
+  id           Int         @id @default(autoincrement())
+  score        Int
+  examId       Int?
+  assignmentId Int?
+  studentId    String
+  comment      String?
+  assignment   Assignment? @relation(fields: [assignmentId], references: [id])
+  exam         Exam?       @relation(fields: [examId], references: [id])
+  student      Student     @relation(fields: [studentId], references: [id])
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  present   Boolean
+  studentId String
+  lessonId  Int
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  student   Student  @relation(fields: [studentId], references: [id])
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  startTime   DateTime
+  endTime     DateTime
+  classId     Int?
+  class       Class?   @relation(fields: [classId], references: [id])
+}
+
+model Announcement {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  date        DateTime
+  classId     Int?
+  class       Class?   @relation(fields: [classId], references: [id])
+}
+
+model Equipment {
+  id          Int                @id @default(autoincrement())
+  name        String             @unique
+  description String?
+  quantity    Int
+  type        String
+  location    String
+  equipmentId String             @unique
+  bookings    EquipmentBooking[]
+}
+
+enum BookingStatus {
+  pending
+  approved
+  rejected
+}
+
+model EquipmentBooking {
+  id          Int       @id @default(autoincrement())
+  startTime   DateTime
+  endTime     DateTime
+  createdAt   DateTime  @default(now())
+  equipmentId Int
+  bookedById  String
+  bookedBy    User      @relation(fields: [bookedById], references: [id])
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+  status      BookingStatus @default(pending)
+}
+
+model User {
+  id       String             @id
+  username String             @unique
+  role     UserRole
+  bookings EquipmentBooking[]
+}
+
+model ProjectDirection {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  projects  Project[]
+}
+
+model Project {
+  id            String           @id @default(cuid())
+  name          String
+  description   String?
+  directionId   String
+  teacherId     String
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  consultations Consultation[]
+  direction     ProjectDirection @relation(fields: [directionId], references: [id])
+  teacher       Teacher          @relation(fields: [teacherId], references: [id])
+  schedules     Schedule[]
+  students      Student[]        @relation("ProjectToStudent")
+}
+
+model Schedule {
+  id        String   @id @default(cuid())
+  projectId String
+  dayOfWeek Day
+  startTime DateTime
+  endTime   DateTime
+  location  String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Consultation {
+  id        String   @id @default(cuid())
+  projectId String
+  dayOfWeek Day
+  startTime DateTime
+  endTime   DateTime
+  link      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  ADMIN
+  STUDENT
+  TEACHER
+}
+
+enum UserSex {
+  MALE
+  FEMALE
+}
+
+enum Day {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
